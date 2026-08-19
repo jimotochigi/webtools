@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="../style/common.css">
   <!--画像作成用CSS読み込み -->
   <link rel="stylesheet" href="../style/makerstyle.css">
-  <!-- Google Fonts 追加（和文・洋文・個性派フォント） -->
+  <!-- Google Fonts 追加 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;900&family=Noto+Sans+JP:wght@700;900&family=Orbitron:wght@700;900&family=Potta+One&family=Shippori+Mincho:wght@700;800&family=Zen+Kaku+Gothic+New:wght@700;900&display=swap" rel="stylesheet">
@@ -17,24 +17,64 @@
   <!-- Vue 3 CDN -->
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <style>
-
+    /* 長押し保存用ダイアログのスタイリング */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .modal-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 90%;
+      max-height: 90%;
+      text-align: center;
+      overflow-y: auto;
+    }
+    .modal-content img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #ccc;
+      margin: 10px 0;
+    }
+    .btn-close {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: #666;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
 
   <header>
     <h1>サークルポスターメーカー</h1>
-
   </header>
   <section class="comment-section">
     <p class="description">
-    スマートフォンからの操作の場合、ドラッグでの文字移動ができなくなる場合がありますが、画面スクロールや他の操作をすると操作可能になる場合があります。</br>
-    画面をリロードすると編集内容が消えてしまうのでご注意ください。
-	</p>  </section>
+      スマートフォンでの操作時、プレビュー上のテキストや背景画像をドラッグして自由に移動できます。<br>
+      画面をリロードすると編集内容が消えてしまうのでご注意ください。
+    </p>
+  </section>
+  
   <div id="app" class="app-container">
     <!-- プレビューエリア（860x424固定） -->
     <section class="preview-section">
       <div class="canvas-wrapper">
+        <!-- 修正: .prevent を外し、JS内で必要時のみスクロールを制御 -->
         <canvas 
           ref="canvasRef"
           :width="CANVAS_WIDTH"
@@ -43,15 +83,30 @@
           @mousemove="onDrag"
           @mouseup="stopDrag"
           @mouseleave="stopDrag"
-          @touchstart.prevent="startDrag"
-          @touchmove.prevent="onDrag"
+          @touchstart="startDrag"
+          @touchmove="onDrag"
           @touchend="stopDrag"
         ></canvas>
       </div>
       <p class="preview-info">&#x26A0; 実サイズではありません。</p>
       <p class="preview-info">&#x1F4A1; プレビュー上のテキスト・背景画像をドラッグして移動できます。</p>
-      <button class="btn-download" @click="downloadImage">&#x2913; 画像をダウンロード</button>
+      <button class="btn-download" @click="downloadImage">&#x2913; 画像を保存 / 表示</button>
     </section>
+
+    <!-- スマホ・PC対応の画像保存モーダル -->
+    <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
+      <div class="modal-content">
+        <h3>画像が生成されました</h3>
+        <p style="font-size: 0.85rem; color: #555;">
+          スマホの場合は<strong>画像を長押しして「写真に保存」</strong>を選択してください。<br>
+          (PCの場合は右クリックで保存できます)
+        </p>
+        <img :src="resultImageSrc" alt="作成されたポスター">
+        <div>
+          <button class="btn-close" @click="showModal = false">閉じる</button>
+        </div>
+      </div>
+    </div>
 
     <!-- 操作パネル -->
     <section class="controls-section">
@@ -79,27 +134,25 @@
 
         <!-- 画像アップロードの場合 -->
         <div v-if="bgType === 'image'" class="form-group">
-
-        <label>背景画像を選択</label>
-          <!-- labelタグで囲み、inputを非表示にしてカスタムボタン化 -->
-        <label class="file-upload-btn">
-          &#x1F5BC; 画像を選択する
-          <input type="file" accept="image/*" @change="handleBgUpload" style="display: none;">
-        </label>
-        <template v-if="bgImage">
-          <div class="form-group" style="margin-top: 12px;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <label>画像スケール（拡大・縮小）: {{ Math.round(bgScale * 100) }}%</label>
-              <button class="btn-secondary" @click="clearBg">画像をクリア</button>
+          <label>背景画像を選択</label>
+          <label class="file-upload-btn">
+            &#x1F5BC; 画像を選択する
+            <input type="file" accept="image/*" @change="handleBgUpload" style="display: none;">
+          </label>
+          <template v-if="bgImage">
+            <div class="form-group" style="margin-top: 12px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label>画像スケール（拡大・縮小）: {{ Math.round(bgScale * 100) }}%</label>
+                <button class="btn-secondary" @click="clearBg">画像をクリア</button>
+              </div>
+              <input type="range" min="0.2" max="3.0" step="0.05" v-model.number="bgScale" @input="renderCanvas">
             </div>
-            <input type="range" min="0.2" max="3.0" step="0.05" v-model.number="bgScale" @input="renderCanvas">
-          </div>
-          <div class="form-group" style="margin-top: 8px;">
-            <label class="checkbox-label">
-              <input type="checkbox" v-model="bgLocked"> &#x1F512; 移動ロック
-            </label>
-          </div>
-        </template>
+            <div class="form-group" style="margin-top: 8px;">
+              <label class="checkbox-label">
+                <input type="checkbox" v-model="bgLocked"> &#x1F512; 移動ロック
+              </label>
+            </div>
+          </template>
         </div>
       </div>
 
@@ -121,7 +174,6 @@
           <div>
             <label>フォント種類</label>
             <select v-model="mainText.fontFamily" @change="renderCanvas">
-              <!-- 選択肢を拡張 -->
               <option value="'Noto Sans JP', sans-serif">太字ゴシック</option>
               <option value="'M PLUS Rounded 1c', sans-serif">丸ゴシック</option>
               <option value="'Shippori Mincho', serif">明朝体</option>
@@ -167,7 +219,6 @@
           <div>
             <label>フォント種類</label>
             <select v-model="subText.fontFamily" @change="renderCanvas">
-              <!-- 選択肢を拡張 -->
               <option value="'Noto Sans JP', sans-serif">太字ゴシック</option>
               <option value="'M PLUS Rounded 1c', sans-serif">丸ゴシック</option>
               <option value="'Shippori Mincho', serif">明朝体</option>
@@ -217,7 +268,6 @@
     </p>
   </footer>
 
-
   <script>
     const { createApp, ref, reactive, onMounted, nextTick } = Vue;
 
@@ -226,6 +276,10 @@
         const canvasRef = ref(null);
         const CANVAS_WIDTH = 860;
         const CANVAS_HEIGHT = 424;
+
+        // 保存用モーダル状態
+        const showModal = ref(false);
+        const resultImageSrc = ref('');
 
         // 背景設定
         const bgType = ref('color');
@@ -265,7 +319,7 @@
           height: 0
         });
 
-        // ウォーターマーク（プリセット固定）
+        // ウォーターマーク
         const watermarkEnabled = ref(true);
         const PRESET_WATERMARK_TEXT = 'DO NOT TRAINING / DO NOT REPOST';
         const PRESET_WATERMARK_OPACITY = 0.08;
@@ -328,10 +382,10 @@
             ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
           }
 
-          // 2. メインテキスト (1行)
+          // 2. メインテキスト
           drawSingleLineText(ctx, mainText);
 
-          // 3. サブテキスト (複数行)
+          // 3. サブテキスト
           drawMultiLineText(ctx, subText);
 
           // 4. ウォーターマーク
@@ -451,10 +505,12 @@
           );
         };
 
+        // タッチ / マウス開始処理
         const startDrag = (e) => {
           const pos = getCanvasPos(e);
 
           if (isHit(pos, mainText)) {
+            if (e.cancelable) e.preventDefault(); // オブジェクトを触ったときのみスクロール阻止
             isDragging.value = true;
             dragTarget.value = 'main';
             dragStartPos.x = pos.x - mainText.x;
@@ -463,6 +519,7 @@
           }
 
           if (isHit(pos, subText)) {
+            if (e.cancelable) e.preventDefault(); // オブジェクトを触ったときのみスクロール阻止
             isDragging.value = true;
             dragTarget.value = 'sub';
             dragStartPos.x = pos.x - subText.x;
@@ -471,6 +528,7 @@
           }
 
           if (bgType.value === 'image' && bgImage.value && !bgLocked.value) {
+            if (e.cancelable) e.preventDefault(); // 画像背景を触ったときのみスクロール阻止
             isDragging.value = true;
             dragTarget.value = 'bg';
             dragStartPos.x = pos.x - bgPos.x;
@@ -478,8 +536,11 @@
           }
         };
 
+        // タッチ / マウス移動処理
         const onDrag = (e) => {
           if (!isDragging.value) return;
+          if (e.cancelable) e.preventDefault(); // ドラッグ中はスクロールを阻止
+
           const pos = getCanvasPos(e);
 
           if (dragTarget.value === 'main') {
@@ -501,17 +562,29 @@
           dragTarget.value = null;
         };
 
+        // スマホ・PC両対応の画像ダウンロード / 表示関数
         const downloadImage = () => {
           const canvas = canvasRef.value;
           if (!canvas) return;
-          const link = document.createElement('a');
-          link.download = `image1-${Date.now()}.png`;
-          link.href = canvas.toDataURL('image/png');
-          link.click();
+
+          const dataUrl = canvas.toDataURL('image/png');
+
+          // PC等の場合は従来どおり直接ダウンロードを試みる
+          const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+          if (!isMobile) {
+            const link = document.createElement('a');
+            link.download = `poster-${Date.now()}.png`;
+            link.href = dataUrl;
+            link.click();
+          } else {
+            // スマホ（iOS Safari等）の場合はポップアップ画面を出して長押し保存させる
+            resultImageSrc.value = dataUrl;
+            showModal.value = true;
+          }
         };
 
         onMounted(() => {
-          // フォントの読み込み完了を待ってからCanvasを再描画する安全処理
           document.fonts.ready.then(() => {
             renderCanvas();
           });
@@ -524,6 +597,8 @@
           canvasRef,
           CANVAS_WIDTH,
           CANVAS_HEIGHT,
+          showModal,
+          resultImageSrc,
           bgType,
           bgColor,
           bgImage,
