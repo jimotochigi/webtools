@@ -14,7 +14,7 @@
       }
     }
 
-    /* ƒvƒŒƒrƒ…[ƒGƒŠƒAiSticky’Ç]j */
+    /* ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼ã‚¨ãƒªã‚¢ï¼ˆStickyè¿½å¾“ï¼‰ */
     .preview-section {
       position: -webkit-sticky;
       position: sticky;
@@ -73,7 +73,7 @@
       transform: scale(0.99);
     }
 
-    /* ‘€ìƒpƒlƒ‹ */
+    /* æ“ä½œãƒ‘ãƒãƒ« */
     .controls-section {
       display: flex;
       flex-direction: column;
@@ -184,7 +184,7 @@
       background-color: #d1d5db;
     }
 
-    /* ƒtƒ@ƒCƒ‹‘I‘ğƒ{ƒ^ƒ“‚ÌƒJƒXƒ^ƒ€ƒfƒUƒCƒ“ */
+    /* ãƒ•ã‚¡ã‚¤ãƒ«é¸æŠãƒœã‚¿ãƒ³ã®ã‚«ã‚¹ã‚¿ãƒ ãƒ‡ã‚¶ã‚¤ãƒ³ */
     .file-upload-btn {
       display: inline-block;
       width: 100%;
