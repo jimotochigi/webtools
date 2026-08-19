@@ -1,4 +1,4 @@
-/* å…¨ä½“åŸºæœ¬è¨­å®š */
+/* ‘S‘ÌŠî–{İ’è */
 :root {
   --primary-color: #61d863;
   --primary-hover: #4ec250;
@@ -25,7 +25,7 @@ body {
   /*padding-bottom: 40px;*/
 }
 
-/* ãƒ˜ãƒƒãƒ€ãƒ¼ */
+/* ƒwƒbƒ_[ */
 /*header {
   border-bottom: 1px solid #ccc;
   padding-bottom: 10px;
@@ -56,7 +56,7 @@ p.description {
   font-size: 0.9rem;
 }
 
-/* ãƒªã‚¹ãƒˆãƒ»ã‚«ãƒ¼ãƒ‰æ  */
+/* ƒŠƒXƒgEƒJ[ƒh˜g */
 .tool-list {
   list-style: none;
   max-width: 1000px;
@@ -82,7 +82,7 @@ p.description {
   color: #555;
 }
 
-/* ãƒœã‚¿ãƒ³ãƒ»ãƒªãƒ³ã‚¯ */
+/* ƒ{ƒ^ƒ“EƒŠƒ“ƒN */
 .btn {
   display: inline-block;
   padding: 6px 12px;
@@ -102,7 +102,7 @@ p.description {
   cursor: not-allowed;
 }
 
-a:visited {
+a {
   color: var(--text-color);
   text-decoration:underline;
 }
@@ -112,7 +112,7 @@ a:hover{
   text-decoration:none;
 }
 
-/* ãƒ•ãƒƒã‚¿ãƒ¼ */
+/* ƒtƒbƒ^[ */
 footer {
   margin-top: 30px;
   border-top: 1px solid #ccc;
