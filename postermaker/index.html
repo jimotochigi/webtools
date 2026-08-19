@@ -296,7 +296,7 @@
         // サークル名
         const mainText = reactive({
           text: 'サークル名',
-          x: 430,
+          x: 100,
           y: 180,
           fontSize: 42,
           fontFamily: "'Zen Maru Gothic', sans-serif",
@@ -424,7 +424,7 @@
           if (!item.text) return;
 
           ctx.font = `bold ${item.fontSize}px ${item.fontFamily}`;
-          ctx.textAlign = 'center';
+          ctx.textAlign = 'left';
           ctx.textBaseline = 'middle';
 
           const metrics = ctx.measureText(item.text);
@@ -435,7 +435,7 @@
           if (item.showBg) {
             ctx.fillStyle = item.bgColor;
             ctx.fillRect(
-              item.x - item.width / 2,
+              item.x,
               item.y - item.height / 2,
               item.width,
               item.height
@@ -443,7 +443,7 @@
           }
 
           ctx.fillStyle = item.color;
-          ctx.fillText(item.text, item.x, item.y);
+          ctx.fillText(item.text, item.x + padding, item.y);
         };
 
         // 複数行テキスト描画
@@ -480,7 +480,7 @@
           ctx.fillStyle = item.color;
           const startY = item.y - ((lines.length - 1) * lineHeight) / 2;
           lines.forEach((line, index) => {
-            ctx.fillText(line, item.x, startY + (index * lineHeight));
+            ctx.fillText(line, item.x + padding, startY + (index * lineHeight));
           });
         };
 
@@ -523,8 +523,8 @@
         const isHit = (pos, item) => {
           if (!item.text || item.locked) return false;
           return (
-            pos.x >= item.x - item.width / 2 &&
-            pos.x <= item.x + item.width / 2 &&
+            pos.x >= item.x &&
+            pos.x <= item.x + item.width &&
             pos.y >= item.y - item.height / 2 &&
             pos.y <= item.y + item.height / 2
           );
