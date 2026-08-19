@@ -7,17 +7,20 @@
   <title>サークルポスターメーカー</title>
   <!-- 共通CSSの読み込み -->
   <link rel="stylesheet" href="../style/common.css">
-  <!--画像作成用CSS読み込み -->
+  <!-- 画像作成用CSS読み込み -->
   <link rel="stylesheet" href="../style/makerstyle.css">
-  <!-- Google Fonts 追加 -->
+
+  <!-- Google Fonts プリコネクト -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;900&family=Noto+Sans+JP:wght@700;900&family=Orbitron:wght@700;900&family=Potta+One&family=Shippori+Mincho:wght@700;800&family=Zen+Kaku+Gothic+New:wght@700;900&display=swap" rel="stylesheet">
+
+  <!-- 指定の7つのフォントを読込（URL形式の修正済） -->
+  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Kaisei+Decol:wght@700&family=New+Tegomin&family=Noto+Serif+JP:wght@700&family=RocknRoll+One&family=WDXL+Lubrifont+JP+N&family=Zen+Maru+Gothic:wght@700;900&display=swap" rel="stylesheet">
 
   <!-- Vue 3 CDN -->
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <style>
-    /* 長押し保存用ダイアログのスタイリング */
+    /* スマホ保存用モーダルのスタイリング */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -74,7 +77,6 @@
     <!-- プレビューエリア（860x424固定） -->
     <section class="preview-section">
       <div class="canvas-wrapper">
-        <!-- 修正: .prevent を外し、JS内で必要時のみスクロールを制御 -->
         <canvas 
           ref="canvasRef"
           :width="CANVAS_WIDTH"
@@ -167,20 +169,21 @@
 
         <div class="form-group">
           <label>サークル名</label>
-          <input type="text" v-model="mainText.text" @input="renderCanvas" placeholder="サークル名">
+          <!-- @inputを renderCanvasWithFont に変更 -->
+          <input type="text" v-model="mainText.text" @input="renderCanvasWithFont" placeholder="サークル名">
         </div>
 
         <div class="form-group row">
           <div>
             <label>フォント種類</label>
-            <select v-model="mainText.fontFamily" @change="renderCanvas">
-              <option value="'Noto Sans JP', sans-serif">太字ゴシック</option>
-              <option value="'M PLUS Rounded 1c', sans-serif">丸ゴシック</option>
-              <option value="'Shippori Mincho', serif">明朝体</option>
-              <option value="'Potta One', cursive">Potta One</option>
-              <option value="'Orbitron', sans-serif">Orbitron</option>
-              <option value="'Comic Sans MS', cursive">Comic Sans MS</option>
-              <option value="monospace">等幅フォント</option>
+            <select v-model="mainText.fontFamily" @change="renderCanvasWithFont">
+              <option value="'Dela Gothic One', sans-serif">デラ ゴシック One</option>
+              <option value="'Kaisei Decol', serif">快星 デコル</option>
+              <option value="'New Tegomin', serif">ニュー手書きミン</option>
+              <option value="'Noto Serif JP', serif">Noto Serif JP</option>
+              <option value="'RocknRoll One', sans-serif">ロックンロール One</option>
+              <option value="'WDXL Lubrifont JP N', sans-serif">WDXL Lubrifont JP N</option>
+              <option value="'Zen Maru Gothic', sans-serif">Zen 丸ゴシック</option>
             </select>
           </div>
           <div>
@@ -212,20 +215,21 @@
 
         <div class="form-group">
           <label>活動内容など</label>
-          <textarea v-model="subText.text" @input="renderCanvas" placeholder="活動内容"></textarea>
+          <!-- @inputを renderCanvasWithFont に変更 -->
+          <textarea v-model="subText.text" @input="renderCanvasWithFont" placeholder="活動内容"></textarea>
         </div>
 
         <div class="form-group row">
           <div>
             <label>フォント種類</label>
-            <select v-model="subText.fontFamily" @change="renderCanvas">
-              <option value="'Noto Sans JP', sans-serif">太字ゴシック</option>
-              <option value="'M PLUS Rounded 1c', sans-serif">丸ゴシック</option>
-              <option value="'Shippori Mincho', serif">明朝体</option>
-              <option value="'Potta One', cursive">Potta One</option>
-              <option value="'Orbitron', sans-serif">Orbitron</option>
-              <option value="'Comic Sans MS', cursive">Comic Sans MS</option>
-              <option value="monospace">等幅フォント</option>
+            <select v-model="subText.fontFamily" @change="renderCanvasWithFont">
+              <option value="'Dela Gothic One', sans-serif">デラ ゴシック One</option>
+              <option value="'Kaisei Decol', serif">快星 デコル</option>
+              <option value="'New Tegomin', serif">ニュー手書きミン</option>
+              <option value="'Noto Serif JP', serif">Noto Serif JP</option>
+              <option value="'RocknRoll One', sans-serif">ロックンロール One</option>
+              <option value="'WDXL Lubrifont JP N', sans-serif">WDXL Lubrifont JP N</option>
+              <option value="'Zen Maru Gothic', sans-serif">Zen 丸ゴシック</option>
             </select>
           </div>
           <div>
@@ -295,7 +299,7 @@
           x: 430,
           y: 180,
           fontSize: 42,
-          fontFamily: "'Noto Sans JP', sans-serif",
+          fontFamily: "'Zen Maru Gothic', sans-serif",
           color: '#1a1a1a',
           showBg: true,
           bgColor: '#ffffff',
@@ -304,13 +308,13 @@
           height: 0
         });
 
-        // 活動内容（複数行対応）
+        // 活動内容
         const subText = reactive({
           text: '活動内容を記載します。\n改行して複数行で表示することも可能です',
           x: 430,
           y: 270,
           fontSize: 20,
-          fontFamily: "'Noto Sans JP', sans-serif",
+          fontFamily: "'Zen Maru Gothic', sans-serif",
           color: '#4b5563',
           showBg: false,
           bgColor: '#ffffff',
@@ -359,7 +363,7 @@
           renderCanvas();
         };
 
-        // Canvas描画関数
+        // Canvas描画メインロジック
         const renderCanvas = () => {
           const canvas = canvasRef.value;
           if (!canvas) return;
@@ -394,6 +398,27 @@
           }
         };
 
+        // 入力中の漢字・文字の読み込み完了を待ってから確実・遅延なく再描画する関数
+        const renderCanvasWithFont = async () => {
+          const mainTextStr = mainText.text || ' ';
+          const subTextStr = subText.text || ' ';
+
+          const mainFontSpec = `${mainText.fontSize}px ${mainText.fontFamily}`;
+          const subFontSpec = `${subText.fontSize}px ${subText.fontFamily}`;
+
+          try {
+            // 文字列（漢字含む）をロードパラメータに渡す
+            await Promise.all([
+              document.fonts.load(mainFontSpec, mainTextStr),
+              document.fonts.load(subFontSpec, subTextStr)
+            ]);
+          } catch (err) {
+            console.warn('フォント読み込みエラー:', err);
+          }
+
+          renderCanvas();
+        };
+
         // 単行テキスト描画
         const drawSingleLineText = (ctx, item) => {
           if (!item.text) return;
@@ -426,7 +451,7 @@
           if (!item.text) return;
 
           ctx.font = `${item.fontSize}px ${item.fontFamily}`;
-          ctx.textAlign = 'center';
+          ctx.textAlign = 'left';
           ctx.textBaseline = 'middle';
 
           const lines = item.text.split('\n');
@@ -505,12 +530,12 @@
           );
         };
 
-        // タッチ / マウス開始処理
+        // ドラッグ開始（タッチ時は対象を触った時のみスクロール阻止）
         const startDrag = (e) => {
           const pos = getCanvasPos(e);
 
           if (isHit(pos, mainText)) {
-            if (e.cancelable) e.preventDefault(); // オブジェクトを触ったときのみスクロール阻止
+            if (e.cancelable) e.preventDefault();
             isDragging.value = true;
             dragTarget.value = 'main';
             dragStartPos.x = pos.x - mainText.x;
@@ -519,7 +544,7 @@
           }
 
           if (isHit(pos, subText)) {
-            if (e.cancelable) e.preventDefault(); // オブジェクトを触ったときのみスクロール阻止
+            if (e.cancelable) e.preventDefault();
             isDragging.value = true;
             dragTarget.value = 'sub';
             dragStartPos.x = pos.x - subText.x;
@@ -528,7 +553,7 @@
           }
 
           if (bgType.value === 'image' && bgImage.value && !bgLocked.value) {
-            if (e.cancelable) e.preventDefault(); // 画像背景を触ったときのみスクロール阻止
+            if (e.cancelable) e.preventDefault();
             isDragging.value = true;
             dragTarget.value = 'bg';
             dragStartPos.x = pos.x - bgPos.x;
@@ -536,10 +561,10 @@
           }
         };
 
-        // タッチ / マウス移動処理
+        // ドラッグ移動中
         const onDrag = (e) => {
           if (!isDragging.value) return;
-          if (e.cancelable) e.preventDefault(); // ドラッグ中はスクロールを阻止
+          if (e.cancelable) e.preventDefault();
 
           const pos = getCanvasPos(e);
 
@@ -562,14 +587,12 @@
           dragTarget.value = null;
         };
 
-        // スマホ・PC両対応の画像ダウンロード / 表示関数
+        // 画像保存処理
         const downloadImage = () => {
           const canvas = canvasRef.value;
           if (!canvas) return;
 
           const dataUrl = canvas.toDataURL('image/png');
-
-          // PC等の場合は従来どおり直接ダウンロードを試みる
           const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
           if (!isMobile) {
@@ -578,18 +601,31 @@
             link.href = dataUrl;
             link.click();
           } else {
-            // スマホ（iOS Safari等）の場合はポップアップ画面を出して長押し保存させる
             resultImageSrc.value = dataUrl;
             showModal.value = true;
           }
         };
 
         onMounted(() => {
-          document.fonts.ready.then(() => {
-            renderCanvas();
+          // 初期化時に全フォントの事前バックグラウンド読み込み
+          const fontsToPreload = [
+            "'Dela Gothic One', sans-serif",
+            "'Kaisei Decol', serif",
+            "'New Tegomin', serif",
+            "'Noto Serif JP', serif",
+            "'RocknRoll One', sans-serif",
+            "'WDXL Lubrifont JP N', sans-serif",
+            "'Zen Maru Gothic', sans-serif"
+          ];
+
+          const sampleChars = 'サークル名活動内容を記載します改行';
+
+          fontsToPreload.forEach(font => {
+            document.fonts.load(`20px ${font}`, sampleChars);
           });
-          nextTick(() => {
-            renderCanvas();
+
+          document.fonts.ready.then(() => {
+            renderCanvasWithFont();
           });
         });
 
@@ -610,6 +646,7 @@
           handleBgUpload,
           clearBg,
           renderCanvas,
+          renderCanvasWithFont,
           startDrag,
           onDrag,
           stopDrag,
