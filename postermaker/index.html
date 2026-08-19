@@ -561,26 +561,40 @@
           }
         };
 
-        // ドラッグ移動中
-        const onDrag = (e) => {
-          if (!isDragging.value) return;
-          if (e.cancelable) e.preventDefault();
+// ドラッグ移動中（画面外移動を防止）
+const onDrag = (e) => {
+  if (!isDragging.value) return;
+  if (e.cancelable) e.preventDefault();
 
-          const pos = getCanvasPos(e);
+  const pos = getCanvasPos(e);
 
-          if (dragTarget.value === 'main') {
-            mainText.x = pos.x - dragStartPos.x;
-            mainText.y = pos.y - dragStartPos.y;
-          } else if (dragTarget.value === 'sub') {
-            subText.x = pos.x - dragStartPos.x;
-            subText.y = pos.y - dragStartPos.y;
-          } else if (dragTarget.value === 'bg') {
-            bgPos.x = pos.x - dragStartPos.x;
-            bgPos.y = pos.y - dragStartPos.y;
-          }
+  if (dragTarget.value === 'main') {
+    // 仮の移動先座標を計算
+    let newX = pos.x - dragStartPos.x;
+    let newY = pos.y - dragStartPos.y;
 
-          renderCanvas();
-        };
+    // --- メインテキストの画面外はみ出し防止制限 ---
+    // 横方向：左端 0 〜 右端（キャンバス幅 - テキスト幅）
+    mainText.x = Math.max(0, Math.min(CANVAS_WIDTH - mainText.width, newX));
+    // 縦方向：上端 (高さ/2) 〜 下端 (キャンバス高さ - 高さ/2)
+    mainText.y = Math.max(mainText.height / 2, Math.min(CANVAS_HEIGHT - mainText.height / 2, newY));
+
+  } else if (dragTarget.value === 'sub') {
+    let newX = pos.x - dragStartPos.x;
+    let newY = pos.y - dragStartPos.y;
+
+    // --- サブテキストの画面外はみ出し防止制限 ---
+    subText.x = Math.max(0, Math.min(CANVAS_WIDTH - subText.width, newX));
+    subText.y = Math.max(subText.height / 2, Math.min(CANVAS_HEIGHT - subText.height / 2, newY));
+
+  } else if (dragTarget.value === 'bg') {
+    // 背景画像は自由移動（そのまま）
+    bgPos.x = pos.x - dragStartPos.x;
+    bgPos.y = pos.y - dragStartPos.y;
+  }
+
+  renderCanvas();
+};
 
         const stopDrag = () => {
           isDragging.value = false;
