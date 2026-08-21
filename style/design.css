@@ -200,6 +200,16 @@ a:hover {
 
 .modal-content img {
 	border: 1px solid #ccc;
+	/* テキスト選択の禁止 */
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+
+	/* 長押し時の青いハイライト背景を消す */
+	-webkit-tap-highlight-color: transparent;
+
+	/* スマホでの長押しメニュー（「写真に保存」）は有効にしつつ、余計な選択カーソルを出さない */
+	-webkit-touch-callout: default;
 }
 
 .btn-close {
