@@ -35,7 +35,7 @@
 		</p>
 	</section>
 	
-	<div id="app" class="app-container">
+	<div id="app" class="app-container" v-cloak
 		<!-- プレビューエリア（860x424固定） -->
 		<section class="preview-section tool-item">
 			<div class="canvas-wrapper">
@@ -47,9 +47,6 @@
 					@mousemove="onDrag"
 					@mouseup="stopDrag"
 					@mouseleave="stopDrag"
-					@touchstart="startDrag"
-					@touchmove="onDrag"
-					@touchend="stopDrag"
 				></canvas>
 			</div>
 			<p class="preview-info">&#x26A0; 実サイズではありません。</p>
@@ -58,8 +55,8 @@
 		</section>
 
 		<!-- スマホ・PC対応の画像保存モーダル -->
-		<div v-if="showModal" class="modal-overlay" @click.self="showModal = false" v-cloak>
-			<div class="modal-content">
+		<div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
+			<div class="modal-content"style="user-select: none; -webkit-user-select: none;">
 				<h3>画像が生成されました</h3>
 				<p style="font-size: 0.85rem; color: #555;">
 					スマホの場合は<strong>画像を長押しして「写真に保存」</strong>を選択してください。<br>
