@@ -58,7 +58,7 @@
 		</section>
 
 		<!-- スマホ・PC対応の画像保存モーダル -->
-		<div v-show="showModal" class="modal-overlay" @click.self="showModal = false">
+		<div v-if="showModal" class="modal-overlay" @click.self="showModal = false" v-cloak>
 			<div class="modal-content">
 				<h3>画像が生成されました</h3>
 				<p style="font-size: 0.85rem; color: #555;">
