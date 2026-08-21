@@ -1,0 +1,260 @@
+/* ==========================================================================
+   デザイン基本設定 & カラー定義
+   ========================================================================== */
+
+:root {
+	--primary-color: #61d863;
+	--primary-hover: #4ec250;
+	--bg-color: #ffffff;
+	--card-bg: #ffffff;
+	--text-color: #333333;
+}
+
+body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	background-color: var(--bg-color);
+	color: var(--text-color);
+	line-height: 1.6;
+}
+
+header {
+	background-color: var(--card-bg);
+	border-bottom: 3px solid var(--primary-color);
+}
+
+header h1 {
+	font-size: 1.25rem;
+	color: #1a1a1a;
+}
+
+p.description {
+	color: #666;
+	font-size: 0.9rem;
+}
+
+/* カード・ツール枠デザイン */
+.tool-list {
+	list-style: none;
+}
+
+.tool-item {
+	border: 1px solid #ddd;
+	border-radius: 4px;
+}
+
+.tool-item h2 {
+	margin: 0 0 6px 0;
+	font-size: 1.1rem;
+}
+
+.tool-item p {
+	margin: 0 0 10px 0;
+	font-size: 0.85rem;
+	color: #555;
+}
+
+/* プレビューエリア装飾 */
+.preview-section {
+	background: var(--card-bg);
+}
+
+.canvas-wrapper {
+	background-color: #eef1f5;
+}
+
+canvas {
+	cursor: move;
+	border: 1px solid #888;
+}
+
+.preview-info {
+	font-size: 0.8rem;
+	color: #666;
+}
+
+.btn-download {
+	font-weight: bold;
+	border: none;
+}
+
+.btn-download:hover {
+	color: var(--primary-color);
+}
+
+.panel-card {
+	border: 1px solid #888;
+}
+
+.panel-title {
+	font-size: 1rem;
+	font-weight: bold;
+	border-bottom: 2px solid var(--primary-color);
+}
+
+/* フォームパーツ装飾 */
+label {
+	font-size: 0.85rem;
+	font-weight: 600;
+	color: #4b5563;
+}
+
+input[type="text"],
+textarea,
+select {
+	border: 1px solid #d1d5db;
+	border-radius: 3px;
+	font-size: 0.9rem;
+	font-family: inherit;
+}
+
+.checkbox-label {
+	font-size: 0.85rem;
+	cursor: pointer;
+	user-select: none;
+}
+
+input[type="checkbox"] {
+	accent-color: var(--primary-color);
+	cursor: pointer;
+}
+
+input[type="color"] {
+	-webkit-appearance: none;
+	border: 1px solid #888;
+	border-radius: 3px;
+	cursor: pointer;
+}
+
+input[type="range"] {
+	accent-color: var(--primary-color);
+}
+
+/* ボタン・リンク */
+.btn {
+	display: inline-block;
+	padding: 6px 12px;
+	background-color: var(--primary-color);
+	color: #000;
+	text-decoration: none;
+	border-radius: 3px;
+	font-size: 0.85rem;
+}
+
+.btn:hover {
+	background-color: var(--primary-hover);
+}
+
+.btn.disabled {
+	background-color: #ccc;
+	cursor: not-allowed;
+}
+
+.btn-secondary {
+	background-color: #e5e7eb;
+	color: #374151;
+	font-size: 0.8rem;
+	font-weight: bold;
+	border: none;
+	border-radius: 3px;
+	cursor: pointer;
+}
+
+.btn-secondary:hover {
+	background-color: #d1d5db;
+}
+
+.file-upload-btn {
+	background-color: #f3f4f6;
+	border: 1px dashed #d1d5db;
+	border-radius: 3px;
+	font-size: 0.85rem;
+	color: #374151;
+	cursor: pointer;
+	transition: background-color 0.2s, border-color 0.2s;
+}
+
+.file-upload-btn:hover {
+	background-color: #e5e7eb;
+	border-color: var(--primary-color);
+}
+
+a {
+	color: var(--text-color);
+	text-decoration: underline;
+}
+
+a:hover {
+	color: var(--primary-color);
+	text-decoration: none;
+}
+
+/* モーダル装飾 */
+.modal-overlay {
+	background: rgba(0, 0, 0, 0.85);
+}
+
+.modal-content {
+	background: #fff;
+	border-radius: 3px;
+}
+
+.modal-content img {
+	border: 1px solid #ccc;
+}
+
+.btn-close {
+	background: #666;
+	color: #fff;
+	border: none;
+	border-radius: 3px;
+	cursor: pointer;
+}
+
+/* フッター装飾 */
+footer {
+	border-top: 1px solid #ccc;
+	font-size: 0.8rem;
+	color: #888;
+}
+
+/* フォントクラス */
+.wdxl-lubrifont-jp-n-regular {
+	font-family: "WDXL Lubrifont JP N", sans-serif;
+	font-weight: 400;
+	font-style: normal;
+}
+
+.noto-serif-jp-regular {
+	font-family: "Noto Serif JP", serif;
+	font-style: normal;
+}
+
+.zen-maru-gothic-regular {
+	font-family: "Zen Maru Gothic", sans-serif;
+	font-weight: 400;
+	font-style: normal;
+}
+
+.dela-gothic-one-regular {
+	font-family: "Dela Gothic One", sans-serif;
+	font-weight: 400;
+	font-style: normal;
+}
+
+.kaisei-decol-regular {
+	font-family: "Kaisei Decol", serif;
+	font-weight: 400;
+	font-style: normal;
+}
+
+.new-tegomin-regular {
+	font-family: "New Tegomin", serif;
+	font-weight: 400;
+	font-style: normal;
+}
+
+.rocknroll-one-regular {
+	font-family: "RocknRoll One", sans-serif;
+	font-weight: 400;
+	font-style: normal;
+}
