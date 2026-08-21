@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ポスターメーカー 共通Canvasライブラリ
  */
 const PosterMakerCore = {
@@ -139,16 +139,21 @@ const PosterMakerCore = {
   },
 
   // マウス/タッチ座標の取得
-  getCanvasPos(canvas, event) {
-    const rect = canvas.getBoundingClientRect();
-    const clientX = event.touches ? event.touches[0].clientX : event.clientX;
-    const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+	getCanvasPos(canvas, event) {
+	  const rect = canvas.getBoundingClientRect();
+	  // changedTouches または touches から座標を取得（touchend対策）
+	  const touch = event.touches && event.touches.length > 0 
+	    ? event.touches[0] 
+	    : (event.changedTouches && event.changedTouches.length > 0 ? event.changedTouches[0] : null);
 
-    return {
-      x: (clientX - rect.left) * (canvas.width / rect.width),
-      y: (clientY - rect.top) * (canvas.height / rect.height)
-    };
-  },
+	  const clientX = touch ? touch.clientX : event.clientX;
+	  const clientY = touch ? touch.clientY : event.clientY;
+
+	  return {
+	    x: (clientX - rect.left) * (canvas.width / rect.width),
+	    y: (clientY - rect.top) * (canvas.height / rect.height)
+	  };
+	},
 
   // 当たり判定
   isHit(pos, item) {
