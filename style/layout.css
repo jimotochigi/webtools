@@ -38,7 +38,6 @@ p.description {
 /* メインアプリケーションレイアウト */
 .app-container {
 	margin: 0 auto;
-	padding: 0 16px;
 	display: grid;
 	grid-template-columns: 1fr;
 	gap: 20px;
@@ -91,7 +90,7 @@ canvas {
 }
 
 .comment-section {
-	padding: 16px;
+	margin-bottom: 12px;
 }
 
 .panel-title {
