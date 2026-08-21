@@ -192,6 +192,13 @@ createApp({
       ];
       await PosterMakerCore.preloadFonts(fontsToPreload);
       renderCanvasWithFont();
+
+	const canvas = canvasRef.value;
+	  if (canvas) {
+	    canvas.addEventListener('touchstart', (e) => startDrag(e), { passive: false });
+	    canvas.addEventListener('touchmove', (e) => onDrag(e), { passive: false });
+	    canvas.addEventListener('touchend', (e) => stopDrag(e), { passive: false });
+	  }
     });
 
     return {
