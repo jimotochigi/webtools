@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
 	<meta name="robots" content="noindex">
@@ -21,45 +21,6 @@
 	<!-- Vue 3 CDN -->
 	<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 	<style>
-		/* スマホ保存用モーダルのスタイリング */
-		.modal-overlay {
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			background: rgba(0, 0, 0, 0.85);
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			z-index: 9999;
-			padding: 20px;
-			box-sizing: border-box;
-		}
-		.modal-content {
-			background: #fff;
-			padding: 20px;
-			border-radius: 8px;
-			max-width: 90%;
-			max-height: 90%;
-			text-align: center;
-			overflow-y: auto;
-		}
-		.modal-content img {
-			max-width: 100%;
-			height: auto;
-			border: 1px solid #ccc;
-			margin: 10px 0;
-		}
-		.btn-close {
-			margin-top: 10px;
-			padding: 8px 16px;
-			background: #666;
-			color: #fff;
-			border: none;
-			border-radius: 4px;
-			cursor: pointer;
-		}
 	</style>
 </head>
 <body>
@@ -76,7 +37,7 @@
 	
 	<div id="app" class="app-container">
 		<!-- プレビューエリア（860x424固定） -->
-		<section class="preview-section">
+		<section class="preview-section tool-item">
 			<div class="canvas-wrapper">
 				<canvas 
 					ref="canvasRef"
@@ -93,7 +54,7 @@
 			</div>
 			<p class="preview-info">&#x26A0; 実サイズではありません。</p>
 			<p class="preview-info">&#x1F4A1; プレビュー上のテキスト・背景画像をドラッグして移動できます。</p>
-			<button class="btn-download" @click="downloadImage">&#x2913; 画像を保存 / 表示</button>
+			<button class="btn-download btn" @click="downloadImage">&#x2913; 画像を保存 / 表示</button>
 		</section>
 
 		<!-- スマホ・PC対応の画像保存モーダル -->
@@ -112,10 +73,10 @@
 		</div>
 
 		<!-- 操作パネル -->
-		<section class="controls-section">
+		<section class="controls-section tool-item">
 
 			<!-- 1. 背景設定 -->
-			<div class="panel-card">
+			<div class="panel-card tool-item">
 				<div class="panel-title">
 					<span>1. 背景設定</span>
 					<span style="font-size: 0.75rem; color: #666; font-weight: normal;">サイズ: 860 × 424px (固定)</span>
@@ -160,7 +121,7 @@
 			</div>
 
 			<!-- 2. サークル名 -->
-			<div class="panel-card">
+			<div class="panel-card tool-item">
 				<div class="panel-title">
 					<span>2. サークル名</span>
 					<label class="checkbox-label">
@@ -170,7 +131,6 @@
 
 				<div class="form-group">
 					<label>サークル名</label>
-					<!-- @inputを renderCanvasWithFont に変更 -->
 					<input type="text" v-model="mainText.text" @input="renderCanvasWithFont" placeholder="サークル名">
 				</div>
 
@@ -206,7 +166,7 @@
 			</div>
 
 			<!-- 3. 活動内容など（複数行） -->
-			<div class="panel-card">
+			<div class="panel-card tool-item">
 				<div class="panel-title">
 					<span>3. 活動内容など</span>
 					<label class="checkbox-label">
@@ -216,7 +176,6 @@
 
 				<div class="form-group">
 					<label>活動内容など</label>
-					<!-- @inputを renderCanvasWithFont に変更 -->
 					<textarea v-model="subText.text" @input="renderCanvasWithFont" placeholder="活動内容"></textarea>
 				</div>
 
@@ -252,7 +211,7 @@
 			</div>
 
 			<!-- 4. ウォーターマーク -->
-			<div class="panel-card">
+			<div class="panel-card tool-item">
 				<div class="panel-title">
 					<span>4. ウォーターマーク（SNS投稿用透かし）</span>
 					<label class="checkbox-label">
@@ -311,7 +270,7 @@
 
 				// 活動内容
 				const subText = reactive({
-					text: '活動内容を記載します。\n改行して複数行で表示することも可能です',
+					text: '活動内容を記載します。\n複数行記載可',
 					x: 430,
 					y: 270,
 					fontSize: 20,
@@ -633,7 +592,7 @@
 						"'Zen Maru Gothic', sans-serif"
 					];
 
-					const sampleChars = 'サークル名活動内容を記載します改行';
+					const sampleChars = 'サークル名';
 
 					fontsToPreload.forEach(font => {
 						document.fonts.load(`20px ${font}`, sampleChars);
